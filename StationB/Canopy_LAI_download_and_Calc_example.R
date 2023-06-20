@@ -75,15 +75,20 @@ for (i in seq(nfile)) {
         nrings = 7,
         nseg = 8,
         display=display,
-        message = F
-    )
+        message = F)
     
-    canopy<-canopy_fisheye(gap.frac)
+    # calculate LAI
+    canopy<- canopy_fisheye(gap.frac)
     canopy
     # LAI = 4 using high-res
     # LAI = 3 using jpeg
     
-    # Data frame creation
+    # remove the downloaded files
+    # comment out if you want to keep the photos
+    file.remove(name)
+    
+    # Data frame creation (currently could be better to include geolocation coordinates)
     if (i == 1) {LAI.vals <- canopy$L} else {LAI.vals <- c(LAI.vals, canopy$L)}
     
 }
+
