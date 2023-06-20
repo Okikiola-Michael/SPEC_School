@@ -7,20 +7,24 @@ library(geoNEON)
 # devtools::install_github('NEONScience/NEON-geolocation/geoNEON')
 library(geoNEON)
 options(stringsAsFactors=F)
-# install.packages('hemispheR')
+# install.packages('hemispheR') 
+#Use this if the R version is not available for your R version
+# devtools::install_git("https://gitlab.com/fchianucci/hemispheR")
 library(hemispheR)
 
 
-wd <- '~/Current Projects/SpecSchool/NEON_LAI/'
-setwd(wd)
+# wd <- '~/Current Projects/SpecSchool/NEON_LAI/'
+# setwd(wd)
 
 dpid <- "DP1.10017.001"
 site <- "MLBS"
 date <- '2022-10'
+date <- '2022-11'
 
 LAI <- loadByProduct(dpID = dpid,
                      site = site,
                      startdate = date,
+                     enddate = date2,
                      check.size = F)
 
 urls <- grep('overstory',LAI$dhp_perimagefile$imageFileUrl, value = T)
@@ -28,17 +32,19 @@ nfile <- length(urls)
 dir.create(date)
 setwd(date)
 
+
+
 for (i in seq(nfile)) {
     iurl <- urls[i]
     name <- unlist(strsplit(iurl, '/'))[10]
     
-    download.file(destfile = name, url=iurl, method='wget', quiet = T)
+    download.file(destfile = name, method ='auto', url=iurl, quiet = F)
     
     # LAI calculation from hemispheR package 
     
     image <- name 
-    display = F
-    img<-import_fisheye(image,
+    display = T
+    img<-import_fisheye(iurl,
                         channel = 'B',
                         circ.mask=list(xc=80,yc=60,rc=80), #xcenter, ycenter, radius
                         circular=F,
